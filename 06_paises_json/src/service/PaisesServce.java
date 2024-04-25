@@ -26,6 +26,7 @@ public class PaisesServce {
 String ruta="C:\\Users\\manana\\Desktop\\BELENGB\\JSON\\paises.json";
 	
 //**************************************************************************************
+	//////
 	private Stream <Pais> getPaises() {
 		try {
 			Gson gson=new Gson();
