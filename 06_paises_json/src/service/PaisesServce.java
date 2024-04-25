@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.gson.Gson;
@@ -26,7 +27,6 @@ public class PaisesServce {
 String ruta="C:\\Users\\manana\\Desktop\\BELENGB\\JSON\\paises.json";
 	
 //**************************************************************************************
-	//////
 	private Stream <Pais> getPaises() {
 		try {
 			Gson gson=new Gson();
@@ -63,6 +63,10 @@ String ruta="C:\\Users\\manana\\Desktop\\BELENGB\\JSON\\paises.json";
 	}
 	
 //*****************************************************************************************
-	public 
+	public List<Pais> paisesPorContinentes() {
+		return getPaises()
+				.collect(Collectors.groupingBy(n->n.getContinente()))
+				.to
+	}
 
 }
