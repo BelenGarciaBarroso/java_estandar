@@ -3,6 +3,7 @@ package view;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import model.Pedido;
@@ -27,11 +28,18 @@ public class PedidosMenu {
 						mostrarReciente();
 						break;
 					case 3:
-						pedidosEntreFechas();
+						eliminarPedido();
 						break;
 					case 4:
 						System.out.println("Adios!");
 						break;
+					case 5:
+						eliminarPedido();
+						break;
+					case 6:
+						listaPedidos();
+						break;
+						
 					
 					default:
 						System.out.println("Opción no válida!");
@@ -48,6 +56,8 @@ public class PedidosMenu {
 				2.- Pedido más reciente
 				3.- Pedidos entre fechas
 				4.- Salir
+				5.- Borrar pedido
+				6.- Lista pedidos
 				
 				""");
 	}
@@ -70,19 +80,38 @@ public class PedidosMenu {
 		System.out.print("Unidades: "+p.getUnidades()+" ");
 		System.out.println("Fecha pedido: "+p.getFechaPedido().format(sdf)+" ");
 	}
-	static void pedidosEntreFechas(){
-		Scanner sc=new Scanner(System.in);
-		DateTimeFormatter sdf=DateTimeFormatter.ofPattern("dd/MM/yyyy");	
-		System.out.println("Fecha inicio (dia/mes/año):");
-		LocalDate fecha1=LocalDate.parse(sc.nextLine(),sdf);	
-		System.out.println("Fecha límite (dia/mes/año):");
-		LocalDate fecha2=LocalDate.parse(sc.nextLine(),sdf);	
-		ArrayList<Pedido> pedidosEncontrados=service.pedidosEntreFechas(fecha1, fecha2);
-		for(Pedido p:pedidosEncontrados) {
-			System.out.print("Producto: "+p.getProducto()+" ");
-			System.out.print("Unidades: "+p.getUnidades()+" ");
-			System.out.println("Fecha pedido: "+p.getFechaPedido().format(sdf)+" ");
-		}
+//	static void pedidosEntreFechas(){
+//		Scanner sc=new Scanner(System.in);
+//		DateTimeFormatter sdf=DateTimeFormatter.ofPattern("dd/MM/yyyy");	
+//		System.out.println("Fecha inicio (dia/mes/año):");
+//		LocalDate fecha1=LocalDate.parse(sc.nextLine(),sdf);	
+//		System.out.println("Fecha límite (dia/mes/año):");
+//		LocalDate fecha2=LocalDate.parse(sc.nextLine(),sdf);	
+//		ArrayList<Pedido> pedidosEncontrados=service.pedidosEntreFechas(fecha1, fecha2);
+//		for(Pedido p:pedidosEncontrados) {
+//			System.out.print("Producto: "+p.getProducto()+" ");
+//			System.out.print("Unidades: "+p.getUnidades()+" ");
+//			System.out.println("Fecha pedido: "+p.getFechaPedido().format(sdf)+" ");
+//		}
+//	}
+	static void eliminarPedido() {
+		Scanner sc=new Scanner(System.in);	
+		System.out.println("Producto:");
+		String producto=sc.nextLine();
+		service.eliminarPedido(producto);
+		
 	}
+	
+	static void listaPedidos() {
+		
+		List <Pedido>lista= new ArrayList<>();
+		lista=service.listaPedidos();
+		for(Pedido p:lista) {
+			System.out.println(p);
+		}
+		
+		
+	}
+
 
 }

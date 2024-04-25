@@ -1,7 +1,5 @@
 package service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,8 +8,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+import exceptions.ErrorFuenteDatosExeption;
 import model.Pedido;
 import utilidades.Util;
 
@@ -33,20 +32,21 @@ public class PedidosService {
 	public void nuevoPedido(Pedido pedido) {
 		try {
 			//Files.writeString(pt, pedido.getProducto()+","+pedido.getUnidades()+","+pedido.getFechaPedido()+System.lineSeparator(),StandardOpenOption.APPEND,StandardOpenOption.CREATE);
-			Files.writeString(pt, Util.convertirPedidoACadena(pedido),StandardOpenOption.APPEND,StandardOpenOption.CREATE);
+			Files.writeString(pt, System.lineSeparator()+Util.convertirPedidoACadena(pedido),StandardOpenOption.APPEND,StandardOpenOption.CREATE);
 		} 
 		catch(IOException ex) {
 			ex.printStackTrace();
 		}	
 	}
 	
-	public Optional <Pedido> pedidoMasReciente() {
+	//**********************************************************************************
+	public Pedido pedidoMasReciente(){
 
 		try {
 			return Files.lines(pt)//Stream<String>
 					.map(n->Util.convertirCadenaAPedido(n)) //Stream <Pedido>
-					.max(Comparator.comparing(p->p.getFechaPedido()));
-			
+					.max(Comparator.comparing(p->p.getFechaPedido()))
+					.orElse(null);
 		}
 		catch(IOException ex) {
 			ex.printStackTrace();
@@ -54,11 +54,12 @@ public class PedidosService {
 		}	
 	}
 	
+	//**********************************************************************************
 	public List<Pedido> pedidosEntreFechas(LocalDate f1, LocalDate f2) {
 		try {
 			return Files.lines(pt)//Stream<String>
 					.map(n->Util.convertirCadenaAPedido(n)) //Stream <Pedido>
-					.map(p.getFechaPedido().compareTo(f1)>=0&&p.getFechaPedido().compareTo(f2)<=0)
+					.filter(p->p.getFechaPedido().compareTo(f1)>=0&&p.getFechaPedido().compareTo(f2)<=0)
 					.toList();
 			
 		}
@@ -66,51 +67,51 @@ public class PedidosService {
 			ex.printStackTrace();
 			return (null);
 		}	
-		
-//		ArrayList<Pedido> aux=new ArrayList<Pedido>();
-//		try(FileReader fr=new FileReader(fichero);
-//				BufferedReader bf=new BufferedReader(fr);){
-//			String linea;
-//			while((linea=bf.readLine())!=null) {
-//				Pedido p=Util.convertirCadenaAPedido(linea);
-//				//si fecha del pedido es posterior o igual a f1 y anterior o igual a f2, se incluye
-//				if(p.getFechaPedido().compareTo(f1)>=0&&p.getFechaPedido().compareTo(f2)<=0) {
-//					aux.add(p);
-//				}
-//			}
-//		}
-//		catch(IOException ex) {
-//			ex.printStackTrace();
-//		}
-//		return aux;
 	}
 	
-	public Pedido pedidoProximoFecha(LocalDate fecha) {
-		Pedido pAux=new Pedido();
-		pAux.setFechaPedido(LocalDate.of(1, 1, 1));
-		try(FileReader fr=new FileReader(fichero);
-				BufferedReader bf=new BufferedReader(fr);){
-			String linea;
-			while((linea=bf.readLine())!=null) {
-				Pedido p=Util.convertirCadenaAPedido(linea);
-				if(Math.abs(ChronoUnit.DAYS.between(p.getFechaPedido(), fecha))<
-						Math.abs(ChronoUnit.DAYS.between(pAux.getFechaPedido(), fecha))) {
-					pAux=p;
-				}
-			}
+	//****************************************************************************************
+	public Pedido pedidoProximoFecha(LocalDate fecha) throws ErrorFuenteDatosExeption {
+		try {
+			return Files.lines(pt)//Stream<String>
+					.map(n->Util.convertirCadenaAPedido(n)) //Stream <Pedido>
+					.min(Comparator.comparingLong(n->Math.abs(ChronoUnit.DAYS.between(n.getFechaPedido(), fecha))))
+					.orElse(null);
 		}
 		catch(IOException ex) {
 			ex.printStackTrace();
-		}
-		return pAux;
+			return null;
+		}	
 	}
-	
-	public void eliminarPedido(String producto) {
 		
+	//********************************************************************************************
+	public void eliminarPedido(String producto) {
+		try {
+			String listaFinal= Files.lines(pt)
+				.map(n->Util.convertirCadenaAPedido(n))
+				.filter(n->!n.getProducto().equals(producto)) //Stream <Pedido>
+				.map(n->Util.convertirPedidoACadena(n)) //Stream<String>
+				.toString();
+				 //.collect(Collectors.joining(System.lineSeparator()));
+			
+			System.out.println(listaFinal);
+			Files.writeString(pt, listaFinal);
+		}
+		catch(IOException ex) {
+			ex.printStackTrace();
+		}	
 	}
 	
-//	public List<Pedido> listaPedidos() {
-//	
-//		return
-//	}
+	//**********************************************************************************************
+	public List<Pedido> listaPedidos() {
+		try {
+			return Files.lines(pt)//Stream<String>
+				.map(n->Util.convertirCadenaAPedido(n)) //Stream <Pedido>
+				.toList();
+		}
+		catch(IOException ex) {
+			ex.printStackTrace();
+			return (null);
+		}	
+	
+	}
 }
