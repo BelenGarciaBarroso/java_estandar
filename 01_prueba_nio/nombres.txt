@@ -3,4 +3,6 @@ martes
 miercoles
 jueves
 vienes
-cadena1cadena2cadena3
+cadena1cadena2cadena3cadena1
+cadena2\ncadena3\ncadena1
+cadena2\ncadena3\n

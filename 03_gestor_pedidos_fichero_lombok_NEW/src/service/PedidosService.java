@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import exceptions.ErrorFuenteDatosExeption;
 import model.Pedido;
@@ -31,8 +30,8 @@ public class PedidosService {
 	//*******************************************************************************
 	public void nuevoPedido(Pedido pedido) {
 		try {
-			//Files.writeString(pt, pedido.getProducto()+","+pedido.getUnidades()+","+pedido.getFechaPedido()+System.lineSeparator(),StandardOpenOption.APPEND,StandardOpenOption.CREATE);
-			Files.writeString(pt, System.lineSeparator()+Util.convertirPedidoACadena(pedido),StandardOpenOption.APPEND,StandardOpenOption.CREATE);
+			Files.writeString(pt, pedido.getProducto()+","+pedido.getUnidades()+","+pedido.getFechaPedido()+System.lineSeparator(),StandardOpenOption.APPEND,StandardOpenOption.CREATE);
+			//Files.writeString(pt, Util.convertirPedidoACadena(pedido)+System.lineSeparator(),StandardOpenOption.APPEND,StandardOpenOption.CREATE);
 		} 
 		catch(IOException ex) {
 			ex.printStackTrace();
@@ -86,15 +85,13 @@ public class PedidosService {
 	//********************************************************************************************
 	public void eliminarPedido(String producto) {
 		try {
-			String listaFinal= Files.lines(pt)
-				.map(n->Util.convertirCadenaAPedido(n))
-				.filter(n->!n.getProducto().equals(producto)) //Stream <Pedido>
-				.map(n->Util.convertirPedidoACadena(n)) //Stream<String>
-				.toString();
-				 //.collect(Collectors.joining(System.lineSeparator()));
-			
-			System.out.println(listaFinal);
-			Files.writeString(pt, listaFinal);
+			List<String> pedidos= Files.lines(pt)
+					.map(Util::convertirCadenaAPedido)//Stream<Pedido>
+					.filter(p->!p.getProducto().equals(producto))//Stream<Pedido>
+					.map(n->Util.convertirPedidoACadena(n)+System.lineSeparator())//Stream<String>
+					.toList();
+			Files.write(pt, pedidos);
+
 		}
 		catch(IOException ex) {
 			ex.printStackTrace();
