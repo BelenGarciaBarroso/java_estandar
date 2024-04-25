@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,10 +64,17 @@ String ruta="C:\\Users\\manana\\Desktop\\BELENGB\\JSON\\paises.json";
 	}
 	
 //*****************************************************************************************
-	public List<Pais> paisesPorContinentes() {
+	public Map<String,List<Pais>> paisesPorContinentes() {
 		return getPaises()
-				.collect(Collectors.groupingBy(n->n.getContinente()))
-				.to
+				.collect(Collectors.groupingBy(n->n.getContinente()));
+	}
+	
+	public String paisPorCapital (String capital) {
+		return getPaises()
+				.filter(p->p.getCapital().equals(capital))
+				.toString();
+		
+		
 	}
 
 }
