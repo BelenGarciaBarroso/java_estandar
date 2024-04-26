@@ -1,12 +1,7 @@
 package service;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
+import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -34,24 +29,12 @@ String ruta="C:\\Users\\manana\\Desktop\\BELENGB\\JSON\\paises.json";
 	
 //**************************************************************************************
 	private Stream <Pais> getPaises() {
-
-		Gson gson=new Gson();
-		String url="http://restcountries.com/v2/all";
-		//Creaamos objeto request que configura la petición
-		HttpRequest resquest=HttpRequest.newBuilder()
-				.uri(URI.create(url))
-				.GET()
-				.build();
-		//creamos objeto client para hacer la llamada
-		HttpClient client=HttpClient.newBuilder()
-				.build();
-		//realizamos la llamda
 		try {
-			HttpResponse<String> respuesta=client.send(resquest, BodyHandlers.ofString());
-			Arrays.stream(gson.fromJson(respuesta.body(),Pais[].class));
-			// Le decimos que nos traiga los datos en forma de array y luego lo convertimos a stream de Pais
-		} catch (IOException | InterruptedException e) {
-			// TODO
+			Gson gson=new Gson();
+			return Arrays.stream(gson.fromJson(new FileReader(ruta), Pais[].class)); //Stream<Pais>
+			
+		}catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return Stream.empty();
 		}

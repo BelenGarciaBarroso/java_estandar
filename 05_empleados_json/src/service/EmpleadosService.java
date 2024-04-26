@@ -24,7 +24,7 @@ public class EmpleadosService {
 	private Stream <Empleado> getEmpleados() {
 		try {
 			Gson gson=new Gson();
-			return Arrays.stream(gson.fromJson(new FileReader(ruta), Empleado[].class)); //Array<stream>
+			return Arrays.stream(gson.fromJson(new FileReader(ruta), Empleado[].class)); //Stream<Empleado>
 			
 		}catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			// TODO Auto-generated catch block
