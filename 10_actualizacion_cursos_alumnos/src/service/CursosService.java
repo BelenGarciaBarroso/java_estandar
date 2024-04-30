@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 
 import model.Curso;
 
@@ -12,8 +14,11 @@ public class CursosService {
 		String cadenaConexion="jdbc:mysql://localhost:3306/cursos";
 		String usuario="root";
 		String password="root";
+
 		
-	private Curso existeCursoPorId (int idcurso) {
+// COMPROBAR SI EXISTE EL CURSO ******************************************************
+	
+		private Curso existeCursoPorId (int idcurso) {
 		try(Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){		
 			String sql="select * from curso where idcurso=?";
 			PreparedStatement st=con.prepareStatement(sql);
@@ -32,12 +37,35 @@ public class CursosService {
 			ex.printStackTrace();
 			return null;
 		}
-		
 	} 
-	
-	
-	public boolean agregarCurso (Curso curso, int ) {
-		
-	}
 
+		
+// AGREGAR CURSO no repetido **********************************************************
+	
+		public boolean agregarCurso (Curso curso, int idCurso ) {
+		try(Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){		
+			Curso cursoNuevo=existeCursoPorId(idCurso);
+			
+			if(cursoNuevo==null) {
+				return false;
+			
+			}
+			String sql="insert into cursos(idCurso,curso,duracion,precio,null) values(?,?,?,?,?)";
+			PreparedStatement ps=con.prepareStatement(sql);
+			Statement st=con.createStatement();
+			ResultSet rs=st.executeQuery(sql);
+			ps.setInt(1, curso.getIdCurso());
+			ps.setString(2, curso.getCurso());
+			ps.setInt(3, curso.getDuracion());
+			ps.setDouble(4, curso.getPrecio());
+			ps.execute();
+			
+			return true;
+				
+			
+		}catch(SQLException ex) {
+			ex.printStackTrace();
+			return false;
+		}	
+	}
 }
