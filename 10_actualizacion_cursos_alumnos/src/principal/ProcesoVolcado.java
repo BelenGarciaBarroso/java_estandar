@@ -19,8 +19,8 @@ public class ProcesoVolcado {
 		//y también sus alumnos. Si el curso está, no lo añadimos y recorremos sus alumnos
 		//para ver si hay alguno nuevo que añadir
 		cursos.forEach(c->{
-			if(cursosService.(c.getIdCurso())==null) {
-				cursosService.altaCurso(c);
+			if(cursosService.existeCursoPorId(c.getIdCurso())==null) {
+				cursosService.agregarCurso(c);
 				c.getAlumnos().forEach(a->{
 					//le asignamos al alumno el idCurso al que pertenece
 					a.setIdCurso(c.getIdCurso());
@@ -28,7 +28,7 @@ public class ProcesoVolcado {
 				});
 			}else {
 				c.getAlumnos().forEach(a->{
-					if(alumnosService.alumnoPorDni(a.getDni())==null) {
+					if(alumnosService.existeAlumnoPorDni(a.getDni())==null) {
 						//le asignamos al alumno el idCurso al que pertenece
 						a.setIdCurso(c.getIdCurso());
 						alumnosService.guardarAlumno(a);

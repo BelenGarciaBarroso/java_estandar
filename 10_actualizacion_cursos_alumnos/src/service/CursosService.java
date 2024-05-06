@@ -18,7 +18,7 @@ public class CursosService {
 		
 // COMPROBAR SI EXISTE EL CURSO ******************************************************
 	
-		private Curso existeCursoPorId (int idcurso) {
+		public Curso existeCursoPorId (int idcurso) {
 		try(Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){		
 			String sql="select * from curso where idcurso=?";
 			PreparedStatement st=con.prepareStatement(sql);
@@ -42,18 +42,16 @@ public class CursosService {
 		
 // AGREGAR CURSO no repetido **********************************************************
 	
-		public boolean agregarCurso (Curso curso, int idCurso ) {
-		try(Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){		
-			Curso cursoNuevo=existeCursoPorId(idCurso);
+		public boolean agregarCurso (Curso curso) {
+				
+		if(existeCursoPorId(curso.getIdCurso())==null) {
+			return false;
 			
-			if(cursoNuevo==null) {
-				return false;
-			
-			}
+		}
+		try(Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){
 			String sql="insert into cursos(idCurso,curso,duracion,precio,null) values(?,?,?,?,?)";
 			PreparedStatement ps=con.prepareStatement(sql);
-			Statement st=con.createStatement();
-			ResultSet rs=st.executeQuery(sql);
+			// Sustituimos parámetros por valores
 			ps.setInt(1, curso.getIdCurso());
 			ps.setString(2, curso.getCurso());
 			ps.setInt(3, curso.getDuracion());
