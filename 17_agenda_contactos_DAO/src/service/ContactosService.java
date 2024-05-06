@@ -7,7 +7,7 @@ import model.Contacto;
 public interface ContactosService {
 
 	// AGREGAR CONTACTO No se admiten contactos con email duplicado ***********************************************************
-	boolean nuevoContacto(Contacto contacto, String emailNuevo);
+	boolean nuevoContacto(Contacto contacto);
 
 	//devuelve el contacto eliminado. Si no se ha eliminado ninguno, devuelve null**********************************	
 	Contacto eliminarContacto(String email);
@@ -19,5 +19,6 @@ public interface ContactosService {
 	Contacto buscarContactoPorId(int id);
 
 	List<Contacto> getContactos();
+
 
 }

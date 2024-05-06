@@ -10,6 +10,11 @@ public interface ContactosDao {
 	void update(Contacto contacto);
 	Contacto findById(int idContacto);
 	List<Contacto> findAll();
+	void deleteByEmail(String email);
+	
+	static ContactosDao of() {
+		return new ContactosDaoImpl();
+	}
 }
 
 
