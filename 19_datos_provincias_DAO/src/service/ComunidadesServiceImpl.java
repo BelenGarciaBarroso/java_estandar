@@ -16,7 +16,7 @@ public class ComunidadesServiceImpl implements ComunidadesService {
 	String password="root";
 	
 	@Override
-	public void saveComunidades(List<Comunidad> comunidades) {
+	public int saveComunidades(List<Comunidad> comunidades) {
 		try (Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){
 			String sql="insert into comunidades(codigo,nombre) values(?,?)";
 			PreparedStatement ps=con.prepareStatement(sql);
