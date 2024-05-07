@@ -1,91 +1,73 @@
 package service;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
+import dao.ComunidadesDao;
+import dao.ComunidadesDaoFactory;
+import dao.MunicipiosDao;
+import dao.ProvinciasDao;
 import model.Comunidad;
 import model.Municipio;
 import model.Provincia;
 
 public class ComunidadesServiceImpl implements ComunidadesService {
-	String cadenaConexion="jdbc:mysql://localhost:3306/comunidades";
-	String usuario="root";
-	String password="root";
+	ComunidadesDao comunidadesDao;
+	ProvinciasDao provinciasDao;
+	MunicipiosDao municipiosDao;
 	
+	public ComunidadesServiceImpl() {
+		comunidadesDao=ComunidadesDaoFactory.getComunidadesDao();
+		provinciasDao=ComunidadesDaoFactory.getProvinciasDao();
+		municipiosDao=ComunidadesDaoFactory.getMunicipiosDao();
+	}
 	@Override
 	public int saveComunidades(List<Comunidad> comunidades) {
-		try (Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){
-			String sql="insert into comunidades(codigo,nombre) values(?,?)";
-			PreparedStatement ps=con.prepareStatement(sql);
-			con.setAutoCommit(false);//cancelamos autocommit
-			for(Comunidad c:comunidades){
-				ps.setString(1, c.getCodigo());
-				ps.setString(2, c.getNombre());
-				ps.execute();
+//		int cont=0;
+//		for (Comunidad c:comunidades) {
+//			if (!comunidadesDao.existComunidad(c.getCodigo())) {
+//				comunidadesDao.saveComunidad(c);
+//				cont++;
+//			}
+//		}
+//		return cont;
+		
+//		return (int)comunidades.stream()
+//				.filter(c->!comunidadesDao.existComunidad(c.getCodigo()))
+//				.peek(c->comunidadesDao.saveComunidad(c))
+//				.count();
+		
+		/*List<Comunidad> comunidadesSinRepetir = new ArrayList<>();
+		for (Comunidad c:comunidades) {
+			if (!comunidadesDao.existComunidad(c.getCodigo())) {
+				comunidadesSinRepetir.add(c);				
 			}
-			con.commit();
+			
 		}
-		catch(SQLException ex) {
-			ex.printStackTrace();
-		}
+		comunidades.saveComunidade(comunidadesSinRepetir);*/
+		List<Comunidad> comunidadesSinRepetir = comunidades.stream()
+				.filter(c->!comunidadesDao.existComunidad(c.getCodigo()))
+				.toList();
+		comunidadesDao.saveComunidad(comunidadesSinRepetir);
+		return comunidadesSinRepetir.size();
 	}
-	public void saveComunidad(Comunidad comunidad) {
-		//pendiente
-	}
-	public boolean existeComunidad(int codigo) {
-		//pendiente
-		return false;
-	}
-	public void borrarComunidades() {
-		try (Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){
-			String sql="delete from comunidades";
-			PreparedStatement ps=con.prepareStatement(sql);
-			ps.execute();
-		}
-		catch(SQLException ex) {
-			ex.printStackTrace();
-		}
-	}
+
 	@Override
-	public void saveProvincias(List<Provincia> provincias) {
-		try (Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){
-			String sql="insert into provincias(codigo,nombre,codComunidad) values(?,?,?)";
-			PreparedStatement ps=con.prepareStatement(sql);
-			con.setAutoCommit(false);//cancelamos autocommit
-			for(Provincia p:provincias){
-				ps.setString(1, p.getCodigo());
-				ps.setString(2, p.getNombre());
-				ps.setString(3, p.getCodComunidad());
-				ps.execute();
-			}
-			con.commit();
-		}
-		catch(SQLException ex) {
-			ex.printStackTrace();
-		}
+	public int saveProvincias(List<Provincia> provincias) {
+		List<String> codigos=provinciasDao.findCodigos();
+		List<Provincia> provinciasSinRepetir=provincias.stream()
+				.filter(p->!codigos.contains(p.getCodigo()))
+				.toList();
+		provinciasDao.saveProvincias(provinciasSinRepetir);
+		return provinciasSinRepetir.size();
 	}
+
 	@Override
-	public void saveMunicipios(List<Municipio> municipios) {
-		try (Connection con=DriverManager.getConnection(cadenaConexion,usuario,password);){
-			String sql="insert into municipios(codigo,nombre,codProvincia,superficie,altitud,poblacion) values(?,?,?,?,?,?)";
-			PreparedStatement ps=con.prepareStatement(sql);
-			con.setAutoCommit(false);//cancelamos autocommit
-			for(Municipio m:municipios){
-				ps.setString(1, m.getCodigo());
-				ps.setString(2, m.getNombre());
-				ps.setString(3, m.getCodProvincia());
-				ps.setDouble(4, m.getSuperficie());
-				ps.setInt(5, m.getAltitud());
-				ps.setInt(6, m.getPoblacion());
-				ps.execute();
-			}
-			con.commit();//confirmamos tx si no ha habido fallos
-		}
-		catch(SQLException ex) {
-			ex.printStackTrace();
-		}
+	public int saveMunicipios(List<Municipio> municipios) {
+		List<String> codigos=municipiosDao.findCodigos();
+		List<Municipio> provinciasSinRepetir=municipios.stream()
+				.filter(p->!codigos.contains(p.getCodigo()))
+				.toList();
+		return provinciasSinRepetir.size();
 	}
+	
 }
