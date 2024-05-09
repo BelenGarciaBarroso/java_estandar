@@ -11,6 +11,7 @@ public class TestStreamBuilder {
 			.add("hello")
 			.add("by")
 			.add("none")
+			.build();
 		
 
 
