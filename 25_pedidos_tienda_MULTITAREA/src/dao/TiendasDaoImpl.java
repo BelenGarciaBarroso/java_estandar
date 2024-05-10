@@ -1,27 +1,30 @@
 package dao;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.GsonBuilder;
 
 import model.Pedido;
+import serializacion.DeserializadorFecha;
 
 public class TiendasDaoImpl implements TiendasDao {
 
-	private Stream <Pedido> getPedido(String ruta) {
-		try {
-			Gson gson=new Gson();
-			return Arrays.stream(gson.fromJson(new FileReader(ruta), Pedido[].class)); //Stream<Pedido>
-			
-		}catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private Stream<Pedido> pedidosFichero(String ruta){		
+		Gson gson=new GsonBuilder()//GsonBuilder
+				.registerTypeAdapter(LocalDate.class, new DeserializadorFecha()) //GsonBuilder
+				.create();
+		try(FileReader reader=new FileReader(ruta);){
+			Pedido[] pedidos=gson.fromJson(reader, Pedido[].class);
+			return Arrays.stream(pedidos);
+		}
+		catch(IOException ex) {
+			ex.printStackTrace();
 			return Stream.empty();
 		}
 	}
@@ -29,7 +32,7 @@ public class TiendasDaoImpl implements TiendasDao {
 	@Override
 	public List<Pedido> getPedidos(String ruta) {
 		// TODO Auto-generated method stub
-		return getPedido(ruta)
+		return pedidosFichero(ruta)
 				.toList();
 	}
 
