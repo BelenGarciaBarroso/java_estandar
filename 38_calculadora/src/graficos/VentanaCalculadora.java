@@ -40,23 +40,34 @@ public class VentanaCalculadora extends JFrame {
 		this.add(jbn1);this.add(jbn2);this.add(jtf1);
 		this.add(jtf2);this.add(sumar);this.add(multiplicar);
 		
-		//ActionListener listenerSumar
+		ActionListener listenerSumar=s->{
+			suma(jtf1,jtf2);
+		};
+		sumar.addActionListener(listenerSumar);
+		ActionListener linesterMulti=m->{
+			multi(jtf1,jtf2);
+		};
+		multiplicar.addActionListener(linesterMulti);
 	}
 		
 		
-	public int suma (String num1, String num2) {
-		int numero1=Integer.parseInt(num1);
-		int numero2=Integer.parseInt(num2);
-		
-		
-			
-			return numero1+numero2;
-			
-		}
-		
-	
+	public int suma (JTextField jtf1, JTextField jtf2) {
+		String aux1=jtf1.getText();
+		String aux2=jtf2.getText();
+		int numero1=Integer.parseInt(aux1);
+		int numero2=Integer.parseInt(aux2);
+		return numero1+numero2;	
 	}
 	
+	public int multi (JTextField jtf1, JTextField jtf2) {
+		String aux1=jtf1.getText();
+		String aux2=jtf2.getText();
+		int numero1=Integer.parseInt(aux1);
+		
+		int numero2=Integer.parseInt(aux2);
+		System.out.println(numero1*numero2);
+		return numero1*numero2;	
+	}
 	
 
 }
