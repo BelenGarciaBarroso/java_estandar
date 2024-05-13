@@ -16,14 +16,15 @@ public class VentanaCalculadora extends JFrame {
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.getContentPane().setBackground(Color.GRAY);
 		this.setLayout(null);
-		numeroUno();
+		ventana();
 		this.setVisible(true);
 		
 	}
 	
-	private void numeroUno() {
+	private void ventana() {
 		JLabel jbn1=new JLabel ("Número Uno");
 		JLabel jbn2=new JLabel ("Número Dos");
+		JLabel jlResultado=new JLabel("");
 		JTextField jtf1=new JTextField ();
 		JTextField jtf2=new JTextField ();
 		JButton sumar=new JButton("Sumar");
@@ -35,18 +36,22 @@ public class VentanaCalculadora extends JFrame {
 		jtf2.setBounds(300,150,100,20);
 		sumar.setBounds(150,250,100,30);
 		multiplicar.setBounds(300,250,100,30);
+		jlResultado.setBounds(150, 270, 150, 30);
+		
 		
 		
 		this.add(jbn1);this.add(jbn2);this.add(jtf1);
 		this.add(jtf2);this.add(sumar);this.add(multiplicar);
+		this.add(jlResultado);
 		
 		ActionListener listenerSumar=s->{
-			suma(jtf1,jtf2);
+			jlResultado.setText("El resultado es: "+suma(jtf1,jtf2));
 		};
 		sumar.addActionListener(listenerSumar);
+		
 		ActionListener linesterMulti=m->{
-			multi(jtf1,jtf2);
-			System.out.println(multi(jtf1,jtf2));
+			jlResultado.setText("El resultado es: "+multi(jtf1,jtf2));
+			
 		};
 		multiplicar.addActionListener(linesterMulti);
 	}
