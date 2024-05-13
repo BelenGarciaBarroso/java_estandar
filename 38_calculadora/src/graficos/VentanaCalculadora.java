@@ -46,6 +46,7 @@ public class VentanaCalculadora extends JFrame {
 		sumar.addActionListener(listenerSumar);
 		ActionListener linesterMulti=m->{
 			multi(jtf1,jtf2);
+			System.out.println(multi(jtf1,jtf2));
 		};
 		multiplicar.addActionListener(linesterMulti);
 	}
@@ -65,7 +66,7 @@ public class VentanaCalculadora extends JFrame {
 		int numero1=Integer.parseInt(aux1);
 		
 		int numero2=Integer.parseInt(aux2);
-		System.out.println(numero1*numero2);
+		
 		return numero1*numero2;	
 	}
 	
