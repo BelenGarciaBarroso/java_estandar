@@ -44,6 +44,7 @@ public class VentanaCalculadora extends JFrame {
 		this.add(jtf2);this.add(sumar);this.add(multiplicar);
 		this.add(jlResultado);
 		
+		
 		ActionListener listenerSumar=s->{
 			jlResultado.setText("El resultado es: "+suma(jtf1,jtf2));
 		};
@@ -69,7 +70,6 @@ public class VentanaCalculadora extends JFrame {
 		String aux1=jtf1.getText();
 		String aux2=jtf2.getText();
 		int numero1=Integer.parseInt(aux1);
-		
 		int numero2=Integer.parseInt(aux2);
 		
 		return numero1*numero2;	
