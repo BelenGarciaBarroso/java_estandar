@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -100,7 +101,8 @@ public class JRegistrar extends JFrame {
 					mensaje="GRABADO";
 				}else {
 					mensaje="el usuario ya existe";
-				}	
+				}
+				JOptionPane.showMessageDialog(JRegistrar.this, mensaje);
 			}
 		});
 		jbGuardar.setFont(new Font("Tahoma", Font.BOLD, 14));
