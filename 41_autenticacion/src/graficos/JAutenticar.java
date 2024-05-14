@@ -101,7 +101,7 @@ public class JAutenticar extends JFrame {
 		jbregistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JRegistrar registrar=new JRegistrar();
-				registrar();
+				registrar.setVisible(true);
 			
 				
 			}

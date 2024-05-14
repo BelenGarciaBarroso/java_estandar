@@ -36,32 +36,28 @@ public class JRegistrar extends JFrame {
 		setBounds(100, 100, 450, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		JRegistrar frame = new JRegistrar();
-		frame.setVisible(true);
+//		JRegistrar frame = new JRegistrar();
+//		frame.setVisible(true);
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		tfusuario = new JTextField();
-		tfusuario.setText("Usuario");
 		tfusuario.setBounds(205, 34, 86, 20);
 		contentPane.add(tfusuario);
 		tfusuario.setColumns(10);
 		
 		tfpassword = new JTextField();
-		tfpassword.setText("Contraseña");
 		tfpassword.setColumns(10);
 		tfpassword.setBounds(205, 77, 86, 20);
 		contentPane.add(tfpassword);
 		
 		tfemail = new JTextField();
-		tfemail.setText("Email");
 		tfemail.setColumns(10);
 		tfemail.setBounds(205, 119, 86, 20);
 		contentPane.add(tfemail);
 		
 		tftelefono = new JTextField();
-		tftelefono.setText("Teléfono");
 		tftelefono.setColumns(10);
 		tftelefono.setBounds(205, 160, 86, 20);
 		contentPane.add(tftelefono);
@@ -92,8 +88,8 @@ public class JRegistrar extends JFrame {
 				String mensaje;
 				String usuario=tfusuario.getText();
 				String password=tfpassword.getText();
-				String email=lEmail.getText();
-				String tel=lTel.getText();
+				String email=tfemail.getText();
+				String tel=tftelefono.getText();
 				ClientesService service=ClientesServiceFactory.getClientesService();
 				Cliente cliente= new Cliente();
 				cliente.setUsuario(usuario);
