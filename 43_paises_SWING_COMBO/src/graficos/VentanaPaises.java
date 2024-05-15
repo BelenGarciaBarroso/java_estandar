@@ -54,10 +54,11 @@ public class VentanaPaises extends JFrame {
 		JComboBox<String> comboContinentes = new JComboBox();
 		comboContinentes.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				String seleccionado=(String)comboContinentes.getSelectedItem();
-				var service= PaisesServiceFactory.getPaisesService();
-				JOptionPane.showMessageDialog(VentanaPaises.this, "Paises de "+seleccionado+" :"+service.getPaisesFiltradosPor(seleccionado).size());
-				
+				if (e.getStateChange() == ItemEvent.SELECTED) { // con esto hacemos que solo muestre el diálogo una vez. ItemEvent.SELECTED es lo que hemos seleccinado con el cursor
+					String seleccionado=(String)comboContinentes.getSelectedItem();
+					var service= PaisesServiceFactory.getPaisesService();
+					JOptionPane.showMessageDialog(VentanaPaises.this, "Paises de "+seleccionado+" :"+service.getPaisesFiltradosPor(seleccionado).size());
+				}	
 			}
 		});
 		comboContinentes.setBounds(97, 23, 117, 18);
