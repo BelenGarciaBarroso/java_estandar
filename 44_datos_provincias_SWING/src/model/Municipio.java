@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 public class Municipio {
 	@SerializedName("NOMBRE")
 	private String nombreMunicipio;
-	@SerializedName("NOMBRE_PROVINCIA")
-	private String nombreProvincia;
 	@SerializedName("POBLACION_CAPITAL")
 	private String poblacion;
+	@SerializedName("ALTITUD")
+	private String altitud;
+	@SerializedName("SUPERFICIE")
+	private double superficie;
 }

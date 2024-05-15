@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import model.Municipio;
 import service.DatosProvinciasFactory;
-import service.PaisesServiceFactory;
+
 
 public class TableModelMunicipiosImpl extends AbstractTableModel {
 	
@@ -29,8 +29,13 @@ public class TableModelMunicipiosImpl extends AbstractTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		return switch (columnIndex) {
+		case 0-> municipios.get(rowIndex).getNombreMunicipio();
+		case 1->municipios.get(rowIndex).getPoblacion();
+		case 2->municipios.get(rowIndex).getAltitud();
+		case 3->municipios.get(rowIndex).getSuperficie();
+		default->"";
+		};
 	}
 
 	@Override
@@ -46,8 +51,13 @@ public class TableModelMunicipiosImpl extends AbstractTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		// TODO Auto-generated method stub
-		return super.getColumnClass(columnIndex);
+		return switch (columnIndex) {
+		case 0->String.class;
+		case 1->String.class;
+		case 2->String.class;
+		case 3->Double.class;
+		default->String.class;
+		};
 	}
 	
 
