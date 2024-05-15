@@ -103,6 +103,7 @@ public class JRegistrar extends JFrame {
 					mensaje="el usuario ya existe";
 				}
 				JOptionPane.showMessageDialog(JRegistrar.this, mensaje);
+				JRegistrar.this.dispose();
 			}
 		});
 		jbGuardar.setFont(new Font("Tahoma", Font.BOLD, 14));
