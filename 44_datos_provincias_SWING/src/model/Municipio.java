@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Municipio {
+	@SerializedName("CODIGOINE")
+	private String codigo;
 	@SerializedName("NOMBRE")
 	private String nombreMunicipio;
-	@SerializedName("POBLACION_CAPITAL")
+	@SerializedName("POBLACION_MUNI")
 	private String poblacion;
 	@SerializedName("ALTITUD")
 	private String altitud;

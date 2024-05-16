@@ -6,7 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.time.LocalTime;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,9 +19,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import adaptadores.ComboboxModelComunidadesImpl;
 import adaptadores.ComboboxModelProvincias;
-import service.DatosProvinciasFactory;
+import adaptadores.TableModelMunicipiosImpl;
+import model.Provincia;
 
 public class VentanaProvincias extends JFrame {
 
@@ -46,59 +53,100 @@ public class VentanaProvincias extends JFrame {
 	 */
 	public VentanaProvincias() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 400);
+		setBounds(100, 100, 519, 438);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lbComunidades = new JLabel("Comunidades");
+		JLabel lbComunidades = new JLabel("Comunidad");
 		lbComunidades.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbComunidades.setFont(new Font("Verdana", Font.BOLD, 12));
-		lbComunidades.setBounds(30, 29, 111, 14);
+		lbComunidades.setBounds(31, 50, 111, 14);
 		contentPane.add(lbComunidades);
 		
-		JComboBox cbProvincias = new JComboBox();
+		JComboBox <Provincia>cbProvincias = new JComboBox<>();
+		cbProvincias.setBounds(152, 78, 167, 22);
+		contentPane.add(cbProvincias);
 		
-		JComboBox cbComunidades = new JComboBox();
+		cbProvincias.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				String codigoProv=((Provincia)cbProvincias.getSelectedItem()).getCodigoProvincia();
+				if(e.getStateChange()==ItemEvent.SELECTED) {
+					table.setModel(new TableModelMunicipiosImpl(codigoProv));
+				}
+			}
+		});
+		
+		JComboBox <String> cbComunidades = new <String>JComboBox();
 		cbComunidades.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) { // con esto hacemos que solo muestre el diálogo una vez. ItemEvent.SELECTED es lo que hemos seleccinado con el cursor
-					String seleccionado=(String)cbComunidades.getSelectedItem();
-					var service= DatosProvinciasFactory.DatosProvinciasService();
-					//JOptionPane.showMessageDialog(VentanaPaises.this, "Paises de "+seleccionado+" :"+service.getPaisesFiltradosPor(seleccionado).size());
-					// Creamos adaptador con los datos de los paises y lo volcamos a JTable
-					var comboProvincias=new ComboboxModelProvincias(seleccionado);
-					cbProvincias.addItemListener(new ItemListener() {
-						public void itemStateChanged(ItemEvent e) {
-							
-						}
-					});
+					String comunidad=(String)cbComunidades.getSelectedItem();
+					cbProvincias.setModel(new ComboboxModelProvincias(comunidad));
+					//para borrar la tabla de municipios
+					//de selecciones previas
+					table.setModel(new DefaultTableModel());
+					
 				}	
 			}
 		});
 		
-		cbComunidades.setBounds(151, 25, 167, 22);
+		
+		
+		cbComunidades.setBounds(152, 46, 167, 22);
 		contentPane.add(cbComunidades);
 		
-		JLabel lbProvincias = new JLabel("Provincias");
+		
+		JLabel lbProvincias = new JLabel("Provincia");
 		lbProvincias.setHorizontalAlignment(SwingConstants.RIGHT);
 		lbProvincias.setFont(new Font("Verdana", Font.BOLD, 12));
-		lbProvincias.setBounds(30, 61, 111, 14);
+		lbProvincias.setBounds(31, 82, 111, 14);
 		contentPane.add(lbProvincias);
-		
-		
-		
-		
-		cbProvincias.setBounds(151, 57, 167, 22);
-		contentPane.add(cbProvincias);
-		
+				
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 127, 414, 223);
+		scrollPane.setBounds(10, 151, 414, 199);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		
+		JLabel lblMunicipios = new JLabel("Municipios");
+		lblMunicipios.setFont(new Font("Verdana", Font.BOLD, 12));
+		lblMunicipios.setBounds(10, 126, 111, 14);
+		contentPane.add(lblMunicipios);
+		
+		//carga de comunidades
+		cbComunidades.setModel(new ComboboxModelComunidadesImpl());
+		
+		JButton salir = new JButton("Salir");
+		salir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				VentanaProvincias.this.dispose();
+			}
+		});
+		salir.setFont(new Font("Verdana", Font.BOLD, 13));
+		salir.setBounds(163, 365, 89, 23);
+		contentPane.add(salir);
+		
+		JLabel lbReloj = new JLabel("");
+		lbReloj.setFont(new Font("Verdana", Font.PLAIN, 12));
+		lbReloj.setBounds(366, 22, 111, 14);
+		contentPane.add(lbReloj);
+		
+		// Hilo Reloj
+		ExecutorService service= Executors.newCachedThreadPool();
+		service.submit(()->{
+			// Actualizar reloj cada medio segundo
+			while (true) {
+				LocalTime hora= LocalTime.now();
+				lbReloj.setText(hora.toString());
+				Thread.sleep(500);
+			}
+		});
+		// para parar de ejecurtarse el programa despues de cerrar la ventana, hay qu eparar el reloj.
+		service.shutdown();
+		
 	}
 }

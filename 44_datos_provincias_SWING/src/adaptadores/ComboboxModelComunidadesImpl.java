@@ -12,7 +12,7 @@ public class ComboboxModelComunidadesImpl extends DefaultComboBoxModel<String> {
 	List<String> comunidades;
 	
 	public ComboboxModelComunidadesImpl () {
-		var comunidadesService=DatosProvinciasFactory.DatosProvinciasService();
+		DatosProvinciasService comunidadesService=DatosProvinciasFactory.DatosProvinciasService();
 		comunidades=comunidadesService.comunidades();
 	}
 
