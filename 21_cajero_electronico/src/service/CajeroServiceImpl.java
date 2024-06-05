@@ -3,6 +3,7 @@ package service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import dao.CajeroDaoFactory;
 import dao.ClientesDao;
 import dao.CuentasDao;
 import dao.MovimientosDao;
@@ -15,6 +16,12 @@ public class CajeroServiceImpl implements CajeroService {
 	ClientesDao clientesDao;
 	CuentasDao cuentasDao;
 	MovimientosDao movimientosDao;
+	
+	public CajeroServiceImpl() {
+		clientesDao = CajeroDaoFactory.getClientesDao();
+		cuentasDao = CajeroDaoFactory.getCuentasDao();
+		movimientosDao = CajeroDaoFactory.getMovimientosDao();
+	}
 	@Override
 	public Cuenta obtenerCuenta(int idCuenta) {
 		return cuentasDao.findById(idCuenta);
